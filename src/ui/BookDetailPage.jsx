@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// 도서 상세 / 등록 페이지
+>>>>>>> origin/api
 import { useEffect, useState } from "react";
 import {
   BookDetail,
@@ -10,6 +14,7 @@ function BookDetailPage({ mode, bookId, onGoList }) {
   const isCreate = mode === "create";
 
   const [title, setTitle] = useState("");
+<<<<<<< HEAD
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const [apiKey, setApiKey] = useState("");
@@ -18,6 +23,10 @@ function BookDetailPage({ mode, bookId, onGoList }) {
   const [coverImage, setCoverImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+=======
+  const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("");
+>>>>>>> origin/api
 
   useEffect(() => {
     if (isCreate) return;
@@ -63,6 +72,7 @@ function BookDetailPage({ mode, bookId, onGoList }) {
     await BookDelete(bookId);
     onGoList();
   };
+<<<<<<< HEAD
   const handleGenerateCover = async () => {
     if (!title || !content) {
       alert("도서 제목과 도서 내용을 입력해주세요.");
@@ -147,6 +157,8 @@ ${content}
     alert("도서가 등록되었습니다.");
     onGoList();
   };
+=======
+>>>>>>> origin/api
 
   return (
     <div>
@@ -175,7 +187,10 @@ ${content}
               onChange={(e) => setTitle(e.target.value)}
             />
           </label>
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/api
           <label>
             작가
             <textarea
