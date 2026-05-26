@@ -30,6 +30,7 @@ function BookDetailPage({ mode, bookId, onGoList }) {
       setTitle(book.title);
       setContent(book.content);
       setAuthor(book.author);
+      setCoverImage(book.coverImageUrl);
     };
 
     fetchBook();
@@ -40,7 +41,7 @@ function BookDetailPage({ mode, bookId, onGoList }) {
       title,
       content,
       author,
-      coverImageUrl: "",
+      coverImageUrl: coverImage,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -54,6 +55,7 @@ function BookDetailPage({ mode, bookId, onGoList }) {
       title,
       content,
       author,
+      coverImageUrl: coverImage,
       updatedAt: new Date().toISOString(),
     });
 
