@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BookCreate } from "../api/bookApi";
 
 function BookDetailPage({ mode, bookId, onGoList }) {
   const isCreate = mode === "create";
@@ -39,19 +40,22 @@ ${content}
 책 표지처럼 세련되고, 제목 분위기가 잘 드러나게 만들어줘.
 `;
 
-      const response = await fetch("https://api.openai.com/v1/images/generations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+      const response = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-image-2",
+            prompt,
+            size: "1024x1536",
+            quality,
+          }),
         },
-        body: JSON.stringify({
-          model: "gpt-image-2",
-          prompt,
-          size: "1024x1536",
-          quality,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -70,7 +74,7 @@ ${content}
   };
 
   const handleCreateBook = async () => {
-    if (!title || !author || !content) {
+    if (!title.trim() || !author.trim() || !content.trim()) {
       alert("제목, 저자, 내용을 모두 입력해주세요.");
       return;
     }
@@ -86,36 +90,46 @@ ${content}
       updatedAt: now,
     };
 
-    await fetch("http://localhost:3000/books", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newBook),
-    });
+    const createdBook = await BookCreate(newBook);
+
+    if (!createdBook) {
+      setError("도서 등록에 실패했습니다.");
+      return;
+    }
 
     alert("도서가 등록되었습니다.");
     onGoList();
   };
 
+  //   await fetch("http://localhost:3000/books", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(newBook),
+  //   });
+
+  //   alert("도서가 등록되었습니다.");
+  //   onGoList();
+  // };
+
   return (
     <div>
+      {/* 공통 헤더 */}
       <header>
         <p>Logo</p>
         <nav>
           <button type="button" onClick={onGoList}>
             도서 목록
           </button>
-          <span>도서 등록</span>
+          <span>{isCreate ? "도서 등록" : "도서 상세"}</span>
         </nav>
       </header>
-
       <main>
+        {/* 좌측: 도서 정보 */}
         <section>
           <h2>{isCreate ? "새로운 도서를 등록하세요" : "도서 상세"}</h2>
-
           {!isCreate && <p>bookId: {bookId}</p>}
-
           <label>
             도서 제목
             <input
@@ -125,7 +139,6 @@ ${content}
               onChange={(e) => setTitle(e.target.value)}
             />
           </label>
-
           <label>
             저자
             <input
@@ -135,7 +148,6 @@ ${content}
               onChange={(e) => setAuthor(e.target.value)}
             />
           </label>
-
           <label>
             도서 내용
             <textarea
@@ -144,21 +156,20 @@ ${content}
               onChange={(e) => setContent(e.target.value)}
             />
           </label>
-
+          {/* CRUD 버튼 */}
           <button type="button" disabled={isCreate}>
             삭제
           </button>
           <button type="button" disabled={isCreate}>
             수정하기
           </button>
-          <button type="button" onClick={handleCreateBook}>
+          <button type="button" onClick={handleCreateBook} disabled={!isCreate}>
             등록하기
           </button>
         </section>
-
+        {/* 우측: AI 표지 생성 패널 */}
         <section>
           <h3>AI 표지 생성 영역</h3>
-
           <label>
             API Key
             <input
@@ -168,30 +179,34 @@ ${content}
               onChange={(e) => setApiKey(e.target.value)}
             />
           </label>
-
           <label>
             품질 선택
-            <select value={quality} onChange={(e) => setQuality(e.target.value)}>
+            <select
+              value={quality}
+              onChange={(e) => setQuality(e.target.value)}
+            >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
           </label>
-
-          <button type="button" onClick={handleGenerateCover} disabled={loading}>
+          <button
+            type="button"
+            onClick={handleGenerateCover}
+            disabled={loading}
+          >
             {loading ? "생성 중..." : "생성"}
           </button>
-
           <p>이미지 미리보기</p>
-
-          {coverImage && (
+          {coverImage ? (
             <img
               src={coverImage}
               alt="AI 생성 도서 표지"
               style={{ width: "250px", borderRadius: "8px" }}
             />
+          ) : (
+            <p>아직 생성된 이미지가 없습니다.</p>
           )}
-
           {loading && <p>AI 표지를 생성하고 있습니다...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
         </section>
