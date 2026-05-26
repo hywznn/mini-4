@@ -1,7 +1,16 @@
-function Header({ isMain = false, onGoList, onGoCreate }) {
+import "./Header.css";
+
+function Header({
+  isMain = false,
+  title = "5반 13조 도서 관리 시스템",
+  onGoList,
+  onGoCreate,
+}) {
+  const headerClass = isMain ? "header header--main" : "header";
+
   return (
-    <header className="header">
-      <h1 className="header-title">걷기가 서재</h1>
+    <header className={headerClass}>
+      <h1 className="header-title">{title}</h1>
 
       {!isMain && (
         <nav className="header-nav">
