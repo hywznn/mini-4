@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/books";
+const BASE_URL = 'http://localhost:3000/books';
 
 // 목록 조회: GET /books
 export const BookList = async () => {
@@ -6,7 +6,7 @@ export const BookList = async () => {
     const res = await fetch(BASE_URL);
 
     if (!res.ok) {
-      throw new Error("목록 조회 실패");
+      throw new Error('목록 조회 실패');
     }
 
     return await res.json();
@@ -22,7 +22,7 @@ export const BookDetail = async (id) => {
     const res = await fetch(`${BASE_URL}/${id}`);
 
     if (!res.ok) {
-      throw new Error("상세 조회 실패");
+      throw new Error('상세 조회 실패');
     }
 
     return await res.json();
@@ -36,15 +36,15 @@ export const BookDetail = async (id) => {
 export const BookCreate = async (book) => {
   try {
     const res = await fetch(BASE_URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(book),
     });
 
     if (!res.ok) {
-      throw new Error("도서 등록 실패");
+      throw new Error('도서 등록 실패');
     }
 
     return await res.json();
@@ -57,15 +57,15 @@ export const BookCreate = async (book) => {
 export const BookUpdate = async (id, book) => {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(book),
     });
 
     if (!res.ok) {
-      throw new Error("도서 수정 실패");
+      throw new Error('도서 수정 실패');
     }
 
     return await res.json();
@@ -78,11 +78,11 @@ export const BookUpdate = async (id, book) => {
 export const BookDelete = async (id) => {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
 
     if (!res.ok) {
-      throw new Error("도서 삭제 실패");
+      throw new Error('도서 삭제 실패');
     }
 
     return true;

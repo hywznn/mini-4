@@ -25,6 +25,13 @@ function BookDetailPage({ mode, bookId, onGoList, onGoRegister }) {
       setBookData(INITIAL_BOOK_DATA);
       return;
     }
+    
+    if (isCreate || !bookId) return;
+
+    const fetchBook = async () => {
+      const book = await BookDetail(bookId);
+
+      if (!book) return;
 
     const fetchBookDetail = async () => {
       try {
