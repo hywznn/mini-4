@@ -4,7 +4,7 @@ import { BookList, BookSearch } from "../api/bookApi";
 
 import Header from "../components/Header";
 import BookCard from "../components/bookCard/BookCard";
-import MainButton from "../components/comButton/MainButton";  // 추가
+import MainButton from "../components/comButton/MainButton";
 import "./BookListPage.css";
 
 function BookListPage({ onGoList, onGoRegister, onGoDetail }) {
