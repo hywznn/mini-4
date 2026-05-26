@@ -21,6 +21,17 @@
   box-sizing: border-box;
 }
 
+.bookListPage-message {
+  margin-top: 80px;
+  text-align: center;
+  font-size: var(--font-small);
+  color: var(--text-placeholder);
+}
+
+.bookListPage-message--error {
+  color: var(--error);
+}
+
 @media (max-width: 720px) {
   .bookListPage-grid {
     grid-template-columns: repeat(2, 230px);
