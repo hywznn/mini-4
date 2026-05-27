@@ -54,8 +54,7 @@ flowchart TB
   Register -->|도서 목록| List
   Detail -->|도서 목록| List
 
-  List --> Repeat[반복 이용]
-  Repeat --> List
+  List -.->|반복 이용| List
 ```
 
 ---
