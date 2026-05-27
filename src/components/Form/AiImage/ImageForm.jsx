@@ -5,6 +5,34 @@ import MainButton from "../../comButton/MainButton";
 import BookImage from "../../bookCard/BookImage";
 import "./ImageFormStyle.css";
 
+const resizeImageDataUrl = (dataUrl, targetWidth = 200, targetHeight = 230) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        reject(new Error("이미지 리사이즈에 실패했습니다."));
+
+        return;
+      }
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      const resizedDataUrl = canvas.toDataURL("image/jpeg", 0.72);
+      resolve(resizedDataUrl);
+    };
+    img.onerror = () => {
+      reject(new Error("이미지를 불러오지 못했습니다."));
+    };
+    img.src = dataUrl;
+  });
+};
+
 function ImageForm({ bookData, setBookData }) {
   const [apiKey, setApiKey] = useState("");
   const [selectedQuality, setSelectedQuality] = useState("medium");
@@ -72,21 +100,28 @@ ${bookData.content}
 
       const data = await response.json();
 
+      console.log("OpenAI image response:", data);
+
       if (!response.ok) {
         throw new Error(data.error?.message || "이미지 생성 실패");
       }
 
       const imageBase64 = data.data[0].b64_json;
+      const originalDataUrl = `data:image/png;base64,${imageBase64}`;
+
+      const resizedDataUrl = await resizeImageDataUrl(
+        originalDataUrl,
+        200,
+        230,
+      );
 
       setBookData((prev) => ({
         ...prev,
-        coverImageUrl: `data:image/png;base64,${imageBase64}`,
+        coverImageUrl: resizedDataUrl,
       }));
     } catch (error) {
-      console.error(error);
-      setErrorMsg(
-        "이미지 생성에 실패했습니다. API Key 또는 네트워크 상태를 확인해주세요.",
-      );
+      console.error("이미지 생성 에러:", error);
+      setErrorMsg(error.message || "이미지 생성에 실패했습니다.");
     } finally {
       setIsLoading(false);
     }
